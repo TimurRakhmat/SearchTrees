@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Lab2_3rd_part\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\Lab2_3rd_part\AC.h" />
     <ClInclude Include="..\Lab2_3rd_part\AVL.h" />
     <ClInclude Include="..\Lab2_3rd_part\BS.h" />
@@ -30,6 +27,9 @@
     <ClInclude Include="..\Lab2_3rd_part\Splay.h" />
     <ClInclude Include="..\Lab2_3rd_part\TreeException.h" />
     <ClInclude Include="B23.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
