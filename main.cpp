@@ -2,6 +2,7 @@
 #include "BS.h"
 #include "AVL.h"
 #include "RB.h"
+#include "B23.h"
 #include "Splay.h"
 #include <map>
 #include <set>
@@ -240,12 +241,24 @@ void test_rb_mull()
     IntCompare cmp;
     AC<int, int>* tra = new RB<int, int>(&cmp);
 
-    for (int i = 0; i < 200000; i++)
+    for (int i = 0; i < 300; i++)
     {
         tra->insert(i, i);
     }
 
-    for (int i = 0; i < 200000; i++)
+    cout << "\n\ninfix\n\n";
+    //tra->infix_pass(print_tree);
+    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
+    
+    for (int i = 0; i < 100; i++)
+    {
+        tra->remove(i);
+    }
+    cout << "\n\ninfix\n\n";
+    //tra->infix_pass(print_tree);
+    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
+
+    for (int i = 100; i < 296; i += 2)
     {
         tra->remove(i);
     }
@@ -254,17 +267,33 @@ void test_rb_mull()
     delete tra;
 }
 
+void test_b23()
+{
+    cout << "\nB2-3\n";
+    IntCompare cmp;
+    AC<int, int>* tra = new B23<int, int>(&cmp);
+
+    for (int i = 0; i < 200; i++)
+    {
+        tra->insert(i, i);
+    }
+    /*cout << "\n\ninfix\n\n";
+    tra->infix_pass(print_tree);*/
+    delete tra;
+}
+
 int main()
 {
     try
     {
-        test_rb();
+        test_b23();
+        /*test_rb();
         test_rb2();
         test_rb_mull();
         test_avl();
         test_bs();
         test_splay();
-        test_splay2();
+        test_splay2();*/
     }
     catch (TreeException exc)
     {
