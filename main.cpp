@@ -271,15 +271,39 @@ void test_b23()
 {
     cout << "\nB2-3\n";
     IntCompare cmp;
-    AC<int, int>* tra = new B23<int, int>(&cmp);
+    AC<int, int>* tra = new BS<int, int>(&cmp);
+    /*vector<int>keys = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 5, 15, 25, 8 };
 
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < keys.size(); i++)
+    {
+        tra->insert(keys[i], 0);
+    }
+    cout << "\n\ninfix\n\n";
+    tra->infix_pass(print_tree);
+    vector<int> keys1 = { 5, 8, 10, 30, 15 };
+    for (int i = 0; i < keys.size(); i++)
+    {
+        if (keys[i] == 25)
+            cout << "";
+        tra->remove(keys[i]);
+        cout << "\n\ninfix" << keys[i] << "\n\n";
+        tra->infix_pass(print_tree);
+    }*/
+
+    for (int i = 0; i < 20000; i++)
     {
         tra->insert(i, i);
     }
-    /*cout << "\n\ninfix\n\n";
+
+    /*for (int i = 0; i < 200000; i++)
+    {
+        tra->remove(i);
+    }
+    cout << "\n\ninfix\n\n";
     tra->infix_pass(print_tree);*/
     delete tra;
+
+    cout << "end";
 }
 
 int main()
@@ -287,13 +311,13 @@ int main()
     try
     {
         test_b23();
-        /*test_rb();
+        test_rb();
         test_rb2();
         test_rb_mull();
         test_avl();
         test_bs();
         test_splay();
-        test_splay2();*/
+        test_splay2();
     }
     catch (TreeException exc)
     {

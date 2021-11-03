@@ -179,6 +179,266 @@ protected:
 		return x;
 	}
 
+	//delete from node
+	void redistribute(AC<T1, T2>::Node*& p, AC<T1, T2>::Node*& x)
+	{
+		//case delete from single node
+		if (get_middle(p) == p)
+		{
+			typename AC<T1, T2>::Node** d;
+			if (p->right == x) // x from right
+			{
+				d = &p->left;
+				x->key = p->key;
+				x->value = p->value;
+				p->key = getKR(*d);
+				p->value = getVR(*d);
+				x->left = (*d)->right;
+				(*d)->right = get_middle(*d);
+				get_middle(*d) = *d;
+			}
+			else // x from left
+			{
+				d = &p->right;
+				x->key = p->key;
+				x->value = p->value;
+
+				p->key   = (*d)->key;
+				p->value = (*d)->value;
+
+				(*d)->key = getKR(*d);
+				(*d)->value = getVR(*d);
+
+				x->left = x->right;
+				x->right = (*d)->left;
+				(*d)->left = get_middle(*d);
+				get_middle(*d) = *d;
+			}
+			return;
+		}
+
+		typename AC<T1, T2>::Node** d;
+		typename AC<T1, T2>::Node** tmp;
+		//case x from left
+		if (p->left == x)
+		{
+			if (get_middle(get_middle(p)) != get_middle(p)) //case double middle node
+			{
+				d = &get_middle(p);
+				x->key   = p->key;
+				x->value = p->value;
+
+				p->key   = (*d)->key;
+				p->value = (*d)->value;
+				(*d)->key   = getKR(*d);
+				(*d)->value = getVR(*d);
+
+				x->left = x->right;
+				x->right = (*d)->left;
+				(*d)->left = get_middle(*d);
+				get_middle(*d) = *d;
+
+				return;
+			}
+
+			// case  double right node
+			d = &get_middle(p);
+			tmp = &p->right;
+
+			x->left = x->right;
+			x->right = (*d)->left;
+			x->key = p->key;
+			x->value = p->value;
+
+			p->key = (*d)->key;
+			p->value = (*d)->value;
+
+			(*d)->left = (*d)->right;
+			(*d)->right = (*tmp)->left;
+			(*d)->key   = getKR(p);
+			(*d)->value = getVR(p);
+
+			getKR(p) = (*tmp)->key;
+			getVR(p) = (*tmp)->value;
+
+			(*tmp)->key   = getKR(*tmp);
+			(*tmp)->value = getVR(*tmp);
+			(*tmp)->left = get_middle(*tmp);
+			get_middle(*tmp) = *tmp;
+			
+			return;
+		}
+
+		//case x from right
+		if (p->right == x)
+		{
+			if (get_middle(get_middle(p)) != get_middle(p)) //case double middle node
+			{
+				d = &get_middle(p);
+				x->key   = getKR(p);
+				x->value = getVR(p);
+
+				getKR(p) = getKR(*d);
+				getVR(p) = getVR(*d);
+
+				x->left = (*d)->right;
+				(*d)->right = get_middle(*d);
+				get_middle(*d) = *d;
+
+				return;
+			}
+
+			//case double left node
+			d = &get_middle(p);
+			tmp = &p->left;
+
+			x->left = (*d)->right;
+			x->key = getKR(p);
+			x->value = getVR(p);
+
+			getKR(p) = (*d)->key;
+			getVR(p) = (*d)->value;
+
+			(*d)->right = (*d)->left;
+			(*d)->left = (*tmp)->right;
+			(*d)->key = p->key;
+			(*d)->value = p->value;
+
+			p->key   = getKR(*tmp);
+			p->value = getVR(*tmp);
+
+			(*tmp)->right = get_middle(*tmp);
+			get_middle(*tmp) = *tmp;
+
+			return;
+		}
+
+		//case x from middle
+		//case double right node
+		if (get_middle(p->right) != p->right)
+		{
+			d = &p->right;
+			x->key = getKR(p);
+			x->value = getVR(p);
+			x->left = x->right;
+			x->right = (*d)->left;
+
+			getKR(p) = (*d)->key;
+			getVR(p) = (*d)->value;
+
+			(*d)->key = getKR(*d);
+			(*d)->value = getVR(*d);
+			(*d)->left = get_middle(*d);
+			get_middle(*d) = *d;
+			return;
+		}
+		
+		// case double left node
+		d = &p->left;
+		x->key = p->key;
+		x->value = p->value;
+		x->left = (*d)->right;
+
+		p->key = getKR(*d);
+		p->value = getVR(*d);
+
+		(*d)->right = get_middle(*d);
+		get_middle(*d) = *d;
+		return;
+	}
+	void fix(AC<T1, T2>::Node*& p, AC<T1, T2>::Node* x)
+	{
+		typename AC<T1, T2>::Node** d;
+		//case x from left
+		if (p->left == x)
+		{
+			d = &get_middle(p);
+			getKR(*d) = (*d)->key;
+			getVR(*d) = (*d)->value;
+			(*d)->key = p->key;
+			(*d)->value = p->value;
+			get_middle(*d) = (*d)->left;
+			(*d)->left = x->right;
+
+			p->key = getKR(p);
+			p->value = getVR(p);
+			p->left = get_middle(p);
+			get_middle(p) = p;
+
+			delete x;
+			x = nullptr;
+			return;
+		}
+
+		//case x from right
+		if (p->right == x)
+		{
+			d = &get_middle(p);
+			getKR(*d) = getKR(p);
+			getVR(*d) = getVR(p);
+			get_middle(*d) = (*d)->right;
+			(*d)->right = x->right;
+
+			p->right = get_middle(p);
+			get_middle(p) = p;
+
+			delete x;
+			x = nullptr;
+			return;
+		}
+
+		//case x from middle
+		d = &p->right;
+		getKR(*d) = (*d)->key;
+		getVR(*d) = (*d)->value;
+		(*d)->key = getKR(p);
+		(*d)->value = getVR(p);
+		get_middle(*d) = (*d)->left;
+		(*d)->left = x->right;
+
+		get_middle(p) = p;
+
+		delete x;
+		x = nullptr;
+		return;
+	}
+	void merge(AC<T1, T2>::Node*& p, AC<T1, T2>::Node* x)
+	{
+		typename AC<T1, T2>::Node** d;
+		//case x from left
+		if (p->left == x)
+		{
+			d = &p->right;
+			getKR(*d) = (*d)->key;
+			getVR(*d) = (*d)->value;
+
+			get_middle(*d) = (*d)->left;
+			(*d)->left = x->right;
+
+			(*d)->key = p->key;
+			(*d)->value = p->value;
+
+			delete x;
+			x = nullptr;
+			return;
+		}
+		
+		//case x from right
+		d = &p->left;
+		getKR(*d) = p->key;
+		getVR(*d) = p->value;
+
+		get_middle(*d) = (*d)->right;
+		(*d)->right = x->right;
+
+		delete x;
+		x = nullptr;
+
+		p->right = p->left;
+		p->left = nullptr;
+		return;
+	}
+
 	void hook_new_node(typename AC<T1, T2>::Node*& _node) {
 		_node = new NodeA;
 	}
@@ -252,23 +512,84 @@ protected:
 		this->root = *x;
 		return;
 	}
-	void hook_balance_rem(stack<typename AC<T1, T2>::Node**>& nodes)
+	void hook_remove(stack<typename AC<T1, T2>::Node**>& st, typename AC<T1, T2>::Node**& current, const T1& key)
 	{
-		typename AC<T1, T2>::Node** g;
-		typename AC<T1, T2>::Node** p;
-		typename AC<T1, T2>::Node** u;
-		typename AC<T1, T2>::Node** x = nodes.top();
-		nodes.pop();
-
-		if (nodes.empty())
-			return;
-
-		p = nodes.top();
-		nodes.pop();
-
-		while (*x != this->root) // case 1
-		{
+		// find right node
+		if ((*current)->left and (*current)->right) {
+			typename AC<T1, T2>::Node** minNode;
+			if (this->comparator->compare((*current)->key, key) == 0 and get_middle(*current) != *current)
+					minNode = &get_middle(*current);
+			else
+				minNode = &(*current)->right;
+			hook_push(st, minNode);
+			while ((*minNode)->left) {
+				minNode = &(*minNode)->left;
+				hook_push(st, minNode);
+			}
+			if (get_middle(*current) == *current or (*current)->key == key)
+			{
+				swap((*current)->key, (*minNode)->key);
+				swap((*current)->value, (*minNode)->value);
+			}
+			else
+			{
+				swap(getKR(*current), (*minNode)->key);
+				swap(getVR(*current), (*minNode)->value);
+			}
+			current = minNode;
 		}
+
+		// case double node
+		if (get_middle(*current) != *current)
+		{
+			if ((*current)->key == key)
+			{
+				(*current)->key = getKR(*current);
+				(*current)->value = getVR(*current);
+			}
+			get_middle(*current) = *current;
+			return;
+		}
+
+		// case delete root
+		if (st.size() == 1)
+		{
+			delete* current;
+			*current = nullptr;
+			return;
+		}
+
+		//other cases
+		st.pop();
+		typename AC<T1, T2>::Node** p;
+		while (!st.empty())
+		{
+			p = st.top();
+			st.pop();
+
+			//case redistribute
+			if (get_middle((*p)->left) != (*p)->left or get_middle((*p)->right) != (*p)->right\
+				or get_middle(get_middle(*p)) != get_middle(*p))
+			{
+				redistribute(*p, *current);
+				return;
+			}
+
+			// case double node parent
+			if (get_middle(*p) != *p)
+			{
+				fix(*p, *current);
+				return;
+			}
+
+			merge(*p, *current);
+			current = p;
+		}
+
+		typename AC<T1, T2>::Node* tmp = (*current)->right;
+		delete* current;
+		*current = nullptr;
+		this->root = tmp;
 		return;
 	}
 
@@ -307,7 +628,7 @@ protected:
 		if (*current == nullptr)
 			throw TreeException("KEY ERROR: key for remove not found");
 
-		//hook_remove(st, current);
+		hook_remove(st, current, key);
 		return *current;
 	}
 
