@@ -16,9 +16,9 @@ class Relation
 {
 private:
 	map <string, AC<TKey, TValue>*> dict;
-	string doCorrectIndex(const string& index);
+	string makeIndex(const string& index);
 public:
-	bool isCorrectIdentifier(const string& index);
+	bool isCorrectIndex(const string& index);
 	enum TREE { BST, AVLT, SPLAYT, RBT, B23T };
 	class Exception : public exception
 	{
@@ -34,28 +34,6 @@ public:
 		}
 	};
 
-	/*struct IndexBuilder
-	{
-	private:
-		vector<string> identifiers;
-	public:
-		IndexBuilder() = default;
-		IndexBuilder& newIdentifier(std::string identifier)
-		{
-			if (not Relation<TKey, TValue>::isCorrectIdentifier(identifier))
-				throw Exception("Index has not correct identifier\n");
-			identifiers.push_back(identifier);
-			return *this;
-		}
-		std::string		getResult()
-		{
-			string	res;
-			sort(identifiers.begin(), identifiers.end());
-			for (auto elem : identifiers)
-				res += elem;
-			return res;
-		}
-	};*/
 	Relation<TKey, TValue>& addIndex(TREE type, const Ñompare<TKey>* comp, const string& index);
 	Relation<TKey, TValue>& removeIndex(const std::string& index);
 	Relation<TKey, TValue>& insert(const TKey& key, TValue & value);
@@ -83,7 +61,7 @@ string strip(const string& line)
 }
 
 template <class TKey, class TValue>
-string Relation<TKey, TValue>::doCorrectIndex(const string& index)
+string Relation<TKey, TValue>::makeIndex(const string& index)
 {
 	string res = index;
 
@@ -92,12 +70,12 @@ string Relation<TKey, TValue>::doCorrectIndex(const string& index)
 	while (i != string::npos)
 	{
 		vec.push_back(strip(res.substr(0, i)));
-		if (!isCorrectIdentifier(vec[vec.size() - 1]))
+		if (!isCorrectIndex(vec[vec.size() - 1]))
 			throw Exception("Index has not correct identifier\n");
 		res = res.substr(i + 1);
 		i = res.find(",");
 	}
-	if (!isCorrectIdentifier(res))
+	if (!isCorrectIndex(res))
 		throw Exception("Index has not correct identifier\n");
 	vec.push_back(res);
 	res = "";
@@ -108,7 +86,7 @@ string Relation<TKey, TValue>::doCorrectIndex(const string& index)
 }
 
 template <class TKey, class TValue>
-bool Relation<TKey, TValue>::isCorrectIdentifier(const string& identifier)
+bool Relation<TKey, TValue>::isCorrectIndex(const string& identifier)
 {
 	int len = identifier.length();
 	if (len > 32 or len == 0)
@@ -127,7 +105,7 @@ template <class TKey, class TValue>
 Relation<TKey, TValue>& Relation<TKey, TValue>::addIndex(typename Relation<TKey, TValue>::TREE type,
 	const Ñompare<TKey>* comp, const string& index)
 {
-	string correctIndex = doCorrectIndex(index);
+	string correctIndex = makeIndex(index);
 	if (this->dict.find(correctIndex) != this->dict.end())
 		throw Exception("Index already exists\n");
 	AC <TKey, TValue>* tree = nullptr;
@@ -153,7 +131,7 @@ Relation<TKey, TValue>& Relation<TKey, TValue>::addIndex(typename Relation<TKey,
 template <class TKey, class TValue>
 Relation<TKey, TValue>& Relation<TKey, TValue>::removeIndex(const string& index)
 {
-	string correctIndex = doCorrectIndex(index);
+	string correctIndex = makeIndex(index);
 	if (dict.find(correctIndex) == dict.end())
 		throw Exception("Index not found\n");
 	this->dict.erase(correctIndex);
@@ -185,5 +163,5 @@ Relation<TKey, TValue>& Relation<TKey, TValue>::remove(const TKey& data)
 template <class TKey, class TValue>
 TValue& Relation<TKey, TValue>::find(const TKey& key, const string& index)
 {
-	return this->dict[doCorrectIndex(index)]->find(key);
+	return this->dict[makeIndex(index)]->find(key);
 }
