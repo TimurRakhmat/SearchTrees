@@ -9,7 +9,34 @@ class Ñompare
 {
 public:
 	virtual ~Ñompare() {}
-	virtual int compare(const T& left, const T& right) const = 0;
+	virtual int compare(const T& left, const T& right) const = 0;// { return 0; };
+};
+
+class PointCompare : public Ñompare<char*> // does not work
+{
+public:
+	PointCompare() {}
+	int compare(const char& left, const char& right) const {
+		if (left > right)
+			return 1;
+		if (right > left)
+			return -1;
+		return 0;
+	}
+	int compare(const char* left, const char* right) const {
+		if (*left > *right)
+			return 1;
+		if (*right > *left)
+			return -1;
+		return 0;
+	}
+	int compare(const char*& left, const char*& right) const {
+		if (*left > *right)
+			return 1;
+		if (*right > *left)
+			return -1;
+		return 0;
+	}
 };
 
 class IntCompare : public Ñompare<int>
@@ -33,19 +60,6 @@ public:
 		if (left > right)
 			return 1;
 		if (right > left)
-			return -1;
-		return 0;
-	}
-};
-
-class PointCompare : public Ñompare<int*> // does not work
-{
-public:
-	PointCompare() {}
-	int compare(const int*& left, const int*& right) const {
-		if (*left > *right)
-			return 1;
-		if (*right > *left)
 			return -1;
 		return 0;
 	}

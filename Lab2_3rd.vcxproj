@@ -19,17 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Lab2_3rd_part\AC.h" />
-    <ClInclude Include="..\Lab2_3rd_part\AVL.h" />
-    <ClInclude Include="..\Lab2_3rd_part\BS.h" />
     <ClInclude Include="..\Lab2_3rd_part\Compare.h" />
-    <ClInclude Include="..\Lab2_3rd_part\RB.h" />
-    <ClInclude Include="..\Lab2_3rd_part\Splay.h" />
     <ClInclude Include="..\Lab2_3rd_part\TreeException.h" />
+    <ClInclude Include="AC.h" />
+    <ClInclude Include="AVL.h" />
     <ClInclude Include="B23.h" />
+    <ClInclude Include="BS.h" />
+    <ClInclude Include="RB.h" />
+    <ClInclude Include="Relation.h" />
+    <ClInclude Include="Splay.h" />
+    <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

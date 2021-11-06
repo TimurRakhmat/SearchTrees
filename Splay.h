@@ -10,15 +10,11 @@ class Splay : public BS<T1, T2>
 public:
 	Splay(const Ñompare<T1>* _comparator) : BS<T1, T2>(_comparator) {	}
 	Splay(const AC<T1, T2>& _tree) : BS<T1, T2>(_tree) {}
-	Splay<T1, T2>& operator= (const AC<T1, T2>& tree)
+
+	void rec_copy_self_decorator(AC<T1, T2>& _tree) const
 	{
-		if (this->root != nullptr) {
-			this->rec_del(this->root);
-			this->root = nullptr;
-		}
-		this->comparator = tree.get_compare();
-		this->rec_copy(tree.get_root());
-		return *this;
+		AC<T1, T2>* tmp = &_tree;
+		this->rec_copy_self(this->root, tmp);
 	}
 
 protected:

@@ -14,20 +14,16 @@ public:
 		T1 keyR;
 		T2 valueR;
 		AC<T1, T2>::Node* middle = nullptr;
-		NodeA() :AC<T1, T2>::Node() {}
+		NodeA() :AC<T1, T2>::Node() { middle = this; }
 	};
 
 	B23(const Ñompare<T1>* _comparator) : AC<T1, T2>(_comparator) {	}
 	B23(const AC<T1, T2>& _tree) : AC<T1, T2>(_tree) {}
-	B23<T1, T2>& operator= (B23<T1, T2>& tree)
+
+	void rec_copy_self_decorator(AC<T1, T2>& _tree) const
 	{
-		if (this->root != nullptr) {
-			rec_del(this->root);
-			this->root = nullptr;
-		}
-		this->comparator = tree.get_compare();
-		rec_copy(tree.get_root());
-		return *this;
+		AC<T1, T2>* tmp = &_tree;
+		rec_copy_self(this->root, tmp);
 	}
 
 protected:
@@ -81,7 +77,7 @@ protected:
 		typename AC<T1, T2>::Node** tmp = &static_cast<NodeA*>(node)->middle;
 		return *tmp;
 	}
-	AC<T1, T2>::Node*& get_middle_const(const typename AC<T1, T2>::Node* node)
+	AC<T1, T2>::Node*& get_middle_const(const typename AC<T1, T2>::Node* node) const
 	{
 		typename AC<T1, T2>::Node* tmpc = const_cast<typename AC<T1, T2>::Node*>(node);
 		return static_cast<NodeA*>(tmpc)->middle;
@@ -96,12 +92,12 @@ protected:
 		return static_cast<NodeA*>(node)->valueR;
 	}
 
-	T1& getKRC(const typename AC<T1, T2>::Node* node)
+	T1& getKRC(const typename AC<T1, T2>::Node* node) const
 	{
 		typename AC<T1, T2>::Node* tmpc = const_cast<typename AC<T1, T2>::Node*>(node);
 		return static_cast<NodeA*>(tmpc)->keyR;
 	}
-	T2& getVRC(const typename AC<T1, T2>::Node* node)
+	T2& getVRC(const typename AC<T1, T2>::Node* node) const
 	{
 		typename AC<T1, T2>::Node* tmpc = const_cast<typename AC<T1, T2>::Node*>(node);
 		return static_cast<NodeA*>(tmpc)->valueR;
@@ -129,8 +125,70 @@ protected:
 			leftnode->right = rightnode->right;
 			get_middle(leftnode) = rightnode->left;
 		}
+
+		delete rightnode;
+		rightnode = nullptr;
 	}
-	AC<T1, T2>::Node*& insert_into_double_node(AC<T1, T2>::Node*& p, AC<T1, T2>::Node* x)
+	AC<T1, T2>::Node** insert_into_double_node(AC<T1, T2>::Node*& p, AC<T1, T2>::Node*& x)
+	{
+		typename AC<T1, T2>::Node* temp;
+		hook_new_node(temp);
+		if (this->comparator->compare(p->key, x->key) == 1) // case x from left, push node l to up
+		{
+			temp->key = getKR(p);
+			temp->value = getVR(p);
+			temp->left = get_middle(p);
+			temp->right = p->right;
+
+			p->left = x;
+			p->right = temp;
+
+			get_middle(p) = p;
+			get_middle(x) = x;
+			get_middle(temp) = temp;
+			return &p;
+		}
+
+		if (this->comparator->compare(getKR(p), x->key) == -1) // case x from right, push node r to up
+		{
+			temp->key = p->key;
+			temp->value = p->value;
+			temp->left = p->left;
+			temp->right = get_middle(p);
+
+
+			p->right = x;
+			p->left = temp;
+
+			p->key = getKR(p);
+			p->value = getVR(p);
+
+			get_middle(p) = p;
+			get_middle(x) = x;
+			get_middle(temp) = temp;
+			return &p;
+		}
+
+		// case x from middle, push node x to up
+		temp->key = getKR(p);
+		temp->value = getVR(p);
+		temp->right = p->right;
+		temp->left = x->right;
+		x->right = x->left;
+		x->left = p->left;
+
+		p->left = x;
+		p->right = temp;
+
+		swap(x->key, p->key);
+		swap(x->value, p->value);
+
+		get_middle(x) = x;
+		get_middle(temp) = temp;
+		get_middle(p) = p;
+		return &p;
+	}
+	AC<T1, T2>::Node** _insert_into_double_node(AC<T1, T2>::Node* p, AC<T1, T2>::Node* x)
 	{
 		typename AC<T1, T2>::Node* temp;
 		hook_new_node(temp);
@@ -141,12 +199,15 @@ protected:
 			temp->left = x;
 			temp->right = p;
 
+			p->key = getKR(p);
+			p->value = getVR(p);
+
 			p->left = get_middle(p);
 			get_middle(p) = p;
 			x = temp->left;
 			get_middle(x) = x;
 			get_middle(temp) = temp;
-			return temp;
+			return &temp;
 		}
 
 		if (this->comparator->compare(getKR(p), x->key) == -1) // case x from right, push node r to up
@@ -163,11 +224,10 @@ protected:
 			get_middle(x) = x;
 
 			get_middle(temp) = temp;
-			return temp;
+			return &temp;
 		}
 
-		x->left = p;           // case x from middle, push node x to up
-		x->right = temp;
+		// case x from middle, push node x to up
 		get_middle(x) = x;
 		temp->key = getKR(p);
 		temp->value = getVR(p);
@@ -176,7 +236,9 @@ protected:
 		temp->right = p->right;
 		p->right = x->left;
 		get_middle(p) = p;
-		return x;
+		x->left = p;
+		x->right = temp;
+		return &x;
 	}
 
 	//delete from node
@@ -495,16 +557,15 @@ protected:
 
 			if (get_middle(*p) == *p)
 			{
-				get_middle(*p) = nullptr;
 				increase_node(*p, *x);
-				delete* x;
-				*x = nullptr;
+				//delete* x;
+				//*x = nullptr;
 				return;
 			}
 			else
 			{
-				temp = &insert_into_double_node(*p, *x);
-				x = temp;
+				p = insert_into_double_node(*p, *x);
+				x = p;
 			}
 		}
 
@@ -666,5 +727,23 @@ protected:
 			rec_copy(static_cast<NodeA* > (get_middle_const(node)));
 		}
 		rec_copy(static_cast<NodeA*>(node->right));
+	}
+
+	void rec_copy_self(const typename AC<T1, T2>::Node* node, AC<T1, T2>*& _tree) const
+	{
+		if (node == nullptr) {
+			return;
+		}
+		_tree->insert(node->key, node->value);
+		if (!(get_middle_const(node) == node))
+		{
+			_tree->insert(getKRC(node), getVRC(node));
+		}
+		rec_copy_self(static_cast<NodeA*>(node->left), _tree);
+		if (!(get_middle_const(node) == node))
+		{
+			rec_copy_self(static_cast<NodeA*> (get_middle_const(node)), _tree);
+		}
+		rec_copy_self(static_cast<NodeA*>(node->right), _tree);
 	}
 };

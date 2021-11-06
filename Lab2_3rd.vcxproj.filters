@@ -15,22 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Lab2_3rd_part\AVL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Lab2_3rd_part\BS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Lab2_3rd_part\Compare.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Lab2_3rd_part\Splay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Lab2_3rd_part\AC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Lab2_3rd_part\RB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Lab2_3rd_part\TreeException.h">
@@ -39,9 +24,33 @@
     <ClInclude Include="B23.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Relation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AVL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Splay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

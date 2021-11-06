@@ -1,325 +1,75 @@
 #include<iostream>
-#include "BS.h"
-#include "AVL.h"
-#include "RB.h"
-#include "B23.h"
-#include "Splay.h"
+#include "test.h"
 #include <map>
 #include <set>
 #include <vector>
 
 using namespace std;
 
-template <class T1, class T2>
-void print_tree(const T1& key, const T2& value, int depth) {
-    for (int i = 0; i < depth; i++) {
-        cout << '\t';
-    }
-    cout << key << endl;
-}
-template <class T1, class T2>
-void print_nodes(const T1& key, const T2& value, int depth) {
-    std::cout << "key " << key << " value: " << value << " depth: " << depth << '\n';
-}
-
-
-void test_rb()
-{
-    cout << "\nRB\n";
-    IntCompare cmp;
-    AC<int, int>* tra = new RB<int, int>(&cmp);
-    for (int i = 0; i < 36; i += 4)
-    {
-
-        tra->insert(i, i * i);
-        cout << "\n\ninfix\n\n";
-        (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    }
-    tra->insert(13, 243);
-    tra->insert(10, 34);
-    
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    tra->remove(20);
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    tra->remove(10);
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    tra->remove(8);
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    tra->remove(0);
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    delete tra;
-}
-
-void test_avl()
-{
-    cout << "\nAVL\n";
-    IntCompare cmp;
-    AC<int, int>* tra = new AVL<int, int>(&cmp);
-    for (int i = 0; i < 36; i += 4)
-    {
-      
-        tra->insert(i, i * i);
-        cout << "\n\ninfix\n\n";
-        tra->infix_pass(print_tree);
-    }
-    tra->insert(13, 243);
-    tra->insert(10, 34);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    //tra->insert(30, 20);
-    tra->remove(20);
-    tra->remove(10);
-    tra->remove(8);
-    tra->remove(0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    tra->insert(14, 9);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    delete tra;
-}
-
-void test_bs()
-{
-    cout << "\nBS\n";
-    IntCompare cmp;
-    AC<int, int>* tra = new BS<int, int>(&cmp);
-    for (int i = 0; i < 36; i += 4)
-    {
-
-        tra->insert(i, i * i);
-    }
-    tra->insert(13, 243);
-    tra->insert(10, 34);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    //tra->insert(30, 20);
-    tra->remove(13);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    delete tra;
-}
-
-void test_splay()
-{
-    cout << "\nSplay1" << endl;
-    IntCompare cmp;
-    AC<int, int>* tra = new Splay<int, int>(&cmp);
-    for (int i = 0; i < 36; i += 4)
-    {
-        int pows = 1;
-        for (int j = 0; j < i; j++)
-            pows *= -1;
-        tra->insert(i * pows, i * i);
-        cout << "\n\ninfix\n\n";
-        tra->infix_pass(print_tree);
-    }
-    tra->insert(13, 243);
-    tra->insert(10, 34);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    //tra->insert(30, 20);
-    tra->remove(13);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    delete tra;
-}
-
-void test_splay2()
-{
-    cout << "\nSplay1" << endl;
-    IntCompare cmp;
-    AC<int, int>* tra = new Splay<int, int>(&cmp);
-
-    tra->insert(8, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(4, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(2, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(12, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(3, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->find(4);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(20, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(28, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->insert(26, 0);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->find(8);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    tra->remove(28);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    tra->remove(12);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    tra->remove(8);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-
-    delete tra;
-}
-
-void test_rb2()
-{
-    cout << "\nRB\n";
-    vector<int> keys = { 4, 2, 5, 12, 8, 7, 13, 3, 1, 6, 9, 15, 11 };
-    vector<int> keys1 = { 8, 9, 15, 11, 2, 13, 6, 7, 4, 1, 3, 12, 5 };
-    IntCompare cmp;
-    AC<int, int>* tra = new RB<int, int>(&cmp);
-    for (int i = 0; i < keys.size(); i++)
-    {
-        tra->insert(keys[i], 0);
-    }
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    for (int i = 0; i < keys.size(); i++)
-    {
-        tra->remove(keys[keys.size() - 1 - i]);
-        cout << "\n\ninfix\n\n";
-        (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    }
-    /*for (int i = 0; i < keys1.size(); i++)
-    {
-        tra->remove(keys1[i]);
-        cout << "\n\ninfix\n\n";
-        (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    }*/
-    cout << "\n\ninfix\n\n";
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-
-}
-
-void test_rb1()
-{
-    cout << "\nAVL\n";
-    IntCompare cmp;
-    AC<int, int>* tra = new RB<int, int>(&cmp);
-    tra->insert(4, 0);
-
-    tra->remove(4);
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    delete tra;
-}
-
-void test_rb_mull()
-{
-    cout << "\nAVL\n";
-    IntCompare cmp;
-    AC<int, int>* tra = new RB<int, int>(&cmp);
-
-    for (int i = 0; i < 300; i++)
-    {
-        tra->insert(i, i);
-    }
-
-    cout << "\n\ninfix\n\n";
-    //tra->infix_pass(print_tree);
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-    
-    for (int i = 0; i < 100; i++)
-    {
-        tra->remove(i);
-    }
-    cout << "\n\ninfix\n\n";
-    //tra->infix_pass(print_tree);
-    (static_cast<RB<int, int>*>(tra))->print_colorfull_tree();
-
-    for (int i = 100; i < 296; i += 2)
-    {
-        tra->remove(i);
-    }
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    delete tra;
-}
-
-void test_b23()
-{
-    cout << "\nB2-3\n";
-    IntCompare cmp;
-    AC<int, int>* tra = new BS<int, int>(&cmp);
-    /*vector<int>keys = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 5, 15, 25, 8 };
-
-    for (int i = 0; i < keys.size(); i++)
-    {
-        tra->insert(keys[i], 0);
-    }
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);
-    vector<int> keys1 = { 5, 8, 10, 30, 15 };
-    for (int i = 0; i < keys.size(); i++)
-    {
-        if (keys[i] == 25)
-            cout << "";
-        tra->remove(keys[i]);
-        cout << "\n\ninfix" << keys[i] << "\n\n";
-        tra->infix_pass(print_tree);
-    }*/
-
-    for (int i = 0; i < 20000; i++)
-    {
-        tra->insert(i, i);
-    }
-
-    /*for (int i = 0; i < 200000; i++)
-    {
-        tra->remove(i);
-    }
-    cout << "\n\ninfix\n\n";
-    tra->infix_pass(print_tree);*/
-    delete tra;
-
-    cout << "end";
-}
 
 int main()
 {
     try
     {
-        test_b23();
+        /*test_b23();
         test_rb();
         test_rb2();
         test_rb_mull();
         test_avl();
         test_bs();
         test_splay();
-        test_splay2();
+        test_splay2();*/
+
+        //test_rb_mull();
     }
     catch (TreeException exc)
+    {
+        cout << exc.what() << endl;
+    }
+
+    try
+    {
+        PointCompare pcm;
+        SalaryCmp cmpS;
+        NameCmp cmpN;
+        CountCmp cmpC;
+        CountAndSalaryCmp cmpCAS;
+        NameAndAddressAndCountCmp cmpNAC;
+        ALLCmp cmpALL;
+
+
+        Departament d1(4, "devops", 3000, 25, "MoscowCity center", 6);
+        Departament d2(5, "marketing", 2000, 15, "MoscowCity center", 7);
+        Departament d3(6, "frontend", 450, -15, "MoscowCity center", 9);
+
+        vector <string> m1 = { "Tom", "Bob", "Mark", "Tony" };
+        vector <string> m2 = { "Jhon", "Mob", "halk", "Danil", "Alan" };
+        vector <string> m3 = { "Sergey", "Anton", "Kirill", "Frank", "Karl", "Roma" };
+
+        Relation<Departament*, vector <string>> r;
+
+        r.addIndex(Relation<Departament*, vector <string>>::B23T, &cmpS, "salary");
+        r.insert(&d1, m1);
+        r.addIndex(Relation<Departament*, vector <string>>::AVLT, &cmpCAS, "salary,count");
+        r.addIndex(Relation<Departament*, vector <string>>::SPLAYT, &cmpALL, "name,count,salary,floor,address,time");
+
+        
+        //r.insert(&d2, m2);
+        //r.insert(&d3, m3);
+
+        vector <string>* m;
+        m = &r.find(&d3, "count,salary");
+
+        cout << "workers on the 3rd Departament:" << endl;
+        for (auto st : *m)
+            cout << st << endl;
+        r.remove(&d3);
+    }
+    catch (TreeException exc)
+    {
+        cout << exc.what() << endl;
+    }
+    catch (Relation<int, int>::Exception exc)
     {
         cout << exc.what() << endl;
     }

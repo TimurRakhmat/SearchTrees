@@ -2,6 +2,13 @@
 #include "AC.h"
 using namespace std;
 
+template <class T1, class T2>
+void print_tree(const T1& key, const T2& value, int depth) {
+    for (int i = 0; i < depth; i++) {
+        cout << '\t';
+    }
+    cout << key << endl;
+}
 
 template <class T1, class T2>
 class BS : public AC<T1, T2>
@@ -165,6 +172,23 @@ protected:
         rec_copy(node->right);
     }
 
+    void rec_copy_self(const typename AC<T1, T2>::Node* node, AC<T1, T2>*& _tree) const
+    {
+        if (node == nullptr) {
+            return;
+        }
+        _tree->insert(node->key, node->value);
+        rec_copy_self(node->left, _tree);
+        rec_copy_self(node->right, _tree);
+    }
+
+public:
+    void rec_copy_self_decorator(AC<T1, T2>& _tree) const
+    {
+        AC<T1, T2>* tmp = &_tree;
+        rec_copy_self(this->root, tmp);
+    }
+
 public:
     //init
     BS(const Ñompare <T1>* _comparator) : AC<T1, T2>(_comparator) {}
@@ -177,15 +201,5 @@ public:
         this->root = nullptr;
         this->comparator = _tree.get_compare();
         rec_copy(_tree.get_root());
-    }
-    BS<T1, T2>& operator= (const AC<T1, T2>& tree)
-    {
-        if (this->root != nullptr) {
-            rec_del(this->root);
-            this->root = nullptr;
-        }
-        this->comparator = tree.get_compare();
-        rec_copy(tree.get_root());
-        return *this;
     }
 };

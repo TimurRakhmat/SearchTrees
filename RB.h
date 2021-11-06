@@ -20,15 +20,11 @@ public:
 	};
 	RB(const Ñompare<T1>* _comparator) : BS<T1, T2>(_comparator) {	}
 	RB(const AC<T1, T2>& _tree) : BS<T1, T2>(_tree) {}
-	RB<T1, T2>& operator= (const AC<T1, T2>& tree)
+
+	void rec_copy_self_decorator(AC<T1, T2>& _tree) const
 	{
-		if (this->root != nullptr) {
-			this->rec_del(this->root);
-			this->root = nullptr;
-		}
-		this->comparator = tree.get_compare();
-		this->rec_copy(tree.get_root());
-		return *this;
+		AC<T1, T2>* tmp = &_tree;
+		this->rec_copy_self(this->root, tmp);
 	}
 
 protected:
@@ -146,7 +142,6 @@ protected:
 
 	void hook_balance_rem(stack<typename AC<T1, T2>::Node**>& nodes)
 	{
-		typename AC<T1, T2>::Node** g;
 		typename AC<T1, T2>::Node** p;
 		typename AC<T1, T2>::Node** u;
 		typename AC<T1, T2>::Node** x = nodes.top();
@@ -190,7 +185,7 @@ protected:
 					return;
 				}
 
-				if (get_color(*u) and !get_color((*u)->left)) // case 5
+				if (get_color(*u) and !get_color((*u)->left) and get_color((*u)->right)) // case 5
 				{
 					set_color(*u, false);
 					set_color((*u)->left);
@@ -235,7 +230,7 @@ protected:
 					return;
 				}
 
-				if (get_color(*u) and !get_color((*u)->right)) // case 5
+				if (get_color(*u) and !get_color((*u)->right) and get_color((*u)->left)) // case 5
 				{
 					set_color(*u, false);
 					set_color((*u)->right);

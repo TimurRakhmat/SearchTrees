@@ -59,14 +59,16 @@ protected:
         prefix(function, p_node->right, depth + 1);
     }
 
-    //init
-    virtual void rec_del(typename AC<T1, T2>::Node* node) = 0;
-    virtual void rec_copy(const typename AC<T1, T2>::Node* node) = 0;
-
     //method
     virtual Node* insert(const T1& key, const T2& value, Node*& _root) = 0;
     virtual Node* find(const T1& key, Node*& _root) = 0;
     virtual Node* remove(const T1& key, Node*& _root) = 0;
+
+    virtual void rec_del(typename AC<T1, T2>::Node* node) = 0;
+
+public:
+    //init mega
+    virtual void rec_copy_self_decorator(AC<T1, T2>& _tree) const = 0;
 
 public:
     //method_decorater
@@ -114,16 +116,15 @@ public:
         comparator = _comparator;
         root = nullptr;
     }
-    AC(const AC<T1, T2> &_tree) {};
+    AC(const AC<T1, T2>& _tree) {};
 
-    AC<T1, T2>& operator= (const AC<T1, T2> &_tree)
+    virtual AC<T1, T2>& operator= (const AC<T1, T2>& _tree)
     {
         if (this->root != nullptr) {
             rec_del(this->root);
             this->root = nullptr;
         }
-        this->comparator = _tree.get_compare();
-        rec_copy(_tree.get_root());
+        _tree.rec_copy_self_decorator(*this);
         return *this;
     }
 
