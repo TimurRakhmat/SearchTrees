@@ -77,7 +77,7 @@ protected:
             {
                 return;
             }
-            if (comparator_result == 1)
+            if (comparator_result > 0)
             {
                 current = &(*current)->left;
             }
@@ -115,7 +115,7 @@ protected:
         hook_find_and_completed_stack(st, current, key);
         
         if (*current != nullptr)
-            throw TreeException("INSERT ERROR: element already exists");
+            throw AC<T1, T2>::TreeException("INSERT ERROR: element already exists", key);
 
         this->hook_new_node(*current);
         (*current)->key = key;
@@ -131,7 +131,7 @@ protected:
         typename AC<T1, T2>::Node** current = &_root;
         hook_find_and_completed_stack(st, current, key);
         if (*current == nullptr)
-            throw TreeException("KEY ERROR: key for find not found");
+            throw AC<T1, T2>::TreeException("KEY ERROR: key for find not found", key);
         hook_find_splay(st);
         return *current;
     }
@@ -142,7 +142,7 @@ protected:
         hook_find_and_completed_stack(st, current, key);
 
         if (*current == nullptr)
-            throw TreeException("KEY ERROR: key for remove not found");
+            throw AC<T1, T2>::TreeException("KEY ERROR: key for remove not found", key);
 
         hook_remove(st, current);
         return *current;

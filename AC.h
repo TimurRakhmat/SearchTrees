@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-#include "TreeException.h"
+#include <string>
+#include <exception>
 #include "Compare.h"
 #include <stack>
 using namespace std;
@@ -8,7 +9,7 @@ using namespace std;
 template <class T1, class T2>
 class AC
 {
-public:
+protected:
     class Node
     {
     public:
@@ -23,6 +24,23 @@ public:
             right = _right;
         }
         virtual ~Node() {
+        }
+    };
+public:
+    class TreeException : public exception
+    {
+    private:
+        string error_text;
+    public:
+        T1 key;
+
+    public:
+        TreeException(const string& _error_text, const T1& _key) {
+            error_text = _error_text;
+            key = _key;
+        }
+        const char* what() const noexcept {
+            return error_text.c_str();
         }
     };
 
@@ -118,7 +136,7 @@ public:
     }
     AC(const AC<T1, T2>& _tree) {};
 
-    virtual AC<T1, T2>& operator= (const AC<T1, T2>& _tree)
+    AC<T1, T2>& operator= (const AC<T1, T2>& _tree)
     {
         if (this->root != nullptr) {
             rec_del(this->root);

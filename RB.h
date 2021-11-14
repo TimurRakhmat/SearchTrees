@@ -10,7 +10,7 @@ public:
 	//beautifull_print
 	void print_tree(typename BS<T1, T2>::Node* _node, int depth);
 	void print_colorfull_tree();
-
+protected:
 	//init
 	class NodeA : public BS<T1, T2>::Node
 	{
@@ -18,6 +18,7 @@ public:
 		bool black = false;
 		NodeA() :BS<T1, T2>::Node() {}
 	};
+public:
 	RB(const Ñompare<T1>* _comparator) : BS<T1, T2>(_comparator) {	}
 	RB(const AC<T1, T2>& _tree) : BS<T1, T2>(_tree) {}
 

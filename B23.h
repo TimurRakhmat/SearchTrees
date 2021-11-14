@@ -6,7 +6,7 @@ using namespace std;
 template<class T1, class T2>
 class B23 : public AC<T1, T2>
 {
-public:
+protected:
 	//init
 	class NodeA : public AC<T1, T2>::Node
 	{
@@ -16,7 +16,7 @@ public:
 		AC<T1, T2>::Node* middle = nullptr;
 		NodeA() :AC<T1, T2>::Node() { middle = this; }
 	};
-
+public:
 	B23(const Ñompare<T1>* _comparator) : AC<T1, T2>(_comparator) {	}
 	B23(const AC<T1, T2>& _tree) : AC<T1, T2>(_tree) {}
 
@@ -107,7 +107,7 @@ protected:
 	// insert into node
 	void increase_node(typename AC<T1, T2>::Node* leftnode, typename AC<T1, T2>::Node* rightnode)
 	{
-		if (this->comparator->compare(leftnode->key, rightnode->key) == 1) // case x from left
+		if (this->comparator->compare(leftnode->key, rightnode->key) > 0) // case x from left
 		{
 			getKR(leftnode) = leftnode->key;
 			getVR(leftnode) = leftnode->value;
@@ -133,7 +133,7 @@ protected:
 	{
 		typename AC<T1, T2>::Node* temp;
 		hook_new_node(temp);
-		if (this->comparator->compare(p->key, x->key) == 1) // case x from left, push node l to up
+		if (this->comparator->compare(p->key, x->key) > 0) // case x from left, push node l to up
 		{
 			temp->key = getKR(p);
 			temp->value = getVR(p);
@@ -149,7 +149,7 @@ protected:
 			return &p;
 		}
 
-		if (this->comparator->compare(getKR(p), x->key) == -1) // case x from right, push node r to up
+		if (this->comparator->compare(getKR(p), x->key) < 0) // case x from right, push node r to up
 		{
 			temp->key = p->key;
 			temp->value = p->value;
@@ -192,7 +192,7 @@ protected:
 	{
 		typename AC<T1, T2>::Node* temp;
 		hook_new_node(temp);
-		if (this->comparator->compare(p->key, x->key) == 1) // case x from left, push node l to up
+		if (this->comparator->compare(p->key, x->key) > 0) // case x from left, push node l to up
 		{
 			temp->key = p->key;
 			temp->value = p->value;
@@ -210,7 +210,7 @@ protected:
 			return &temp;
 		}
 
-		if (this->comparator->compare(getKR(p), x->key) == -1) // case x from right, push node r to up
+		if (this->comparator->compare(getKR(p), x->key) < 0) // case x from right, push node r to up
 		{
 			temp->key = getKR(p);
 			temp->value = getVR(p);
@@ -519,7 +519,7 @@ protected:
 			{
 				return;
 			}
-			if (comparator_result == 1)
+			if (comparator_result > 0)
 			{
 				current = &(*current)->left;
 			}
@@ -532,7 +532,7 @@ protected:
 				{
 					return;
 				}
-				if (comparator_result == -1)
+				if (comparator_result < 0)
 					current = &(*current)->right;
 				else
 					current = &(get_middle(*current));
@@ -662,7 +662,7 @@ protected:
 		hook_find_and_completed_stack(st, current, key);
 
 		if (*current != nullptr)
-			throw TreeException("INSERT ERROR: element already exists");
+			throw AC<T1, T2>::TreeException("INSERT ERROR: element already exists", key);
 
 		this->hook_new_node(*current);
 		(*current)->key = key;
@@ -677,7 +677,7 @@ protected:
 		typename AC<T1, T2>::Node** current = &_root;
 		hook_find_and_completed_stack(st, current, key);
 		if (*current == nullptr)
-			throw TreeException("KEY ERROR: key for find not found");
+			throw AC<T1, T2>::TreeException("KEY ERROR: key for find not found", key);
 		return *current;
 	}
 	virtual typename AC<T1, T2>::Node* remove(const T1& key, typename AC<T1, T2>::Node*& _root)
@@ -687,7 +687,7 @@ protected:
 		hook_find_and_completed_stack(st, current, key);
 
 		if (*current == nullptr)
-			throw TreeException("KEY ERROR: key for remove not found");
+			throw AC<T1, T2>::TreeException("KEY ERROR: key for remove not found", key);
 
 		hook_remove(st, current, key);
 		return *current;

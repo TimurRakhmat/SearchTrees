@@ -32,7 +32,7 @@ Departament(int _count, string _name, int _salary, int _floor, string _address, 
 
 class SalaryCmp : public Ñompare<Departament*>
 {
-	int compare(const Departament*& d1, const Departament*& d2) const
+	int compare(Departament* const& d1, Departament* const & d2) const
 	{
 		if (d1->get_salary() > d2->get_salary())
 			return 1;
@@ -43,7 +43,7 @@ class SalaryCmp : public Ñompare<Departament*>
 };
 class CountCmp : public Ñompare<Departament*>
 {
-	int compare(const Departament*& d1, const Departament*& d2) const
+	int compare(Departament* const& d1, Departament* const & d2) const
 	{
 		if (d1->count > d2->count)
 			return 1;
@@ -54,7 +54,7 @@ class CountCmp : public Ñompare<Departament*>
 };
 class NameCmp : public Ñompare<Departament*>
 {
-	int compare(const Departament*& d1, const Departament*& d2) const
+	int compare( Departament* const& d1,  Departament*const& d2) const
 	{
 		if (d1->name > d2->name)
 			return 1;
@@ -65,7 +65,7 @@ class NameCmp : public Ñompare<Departament*>
 };
 class CountAndSalaryCmp : public Ñompare<Departament*>
 {
-	int compare(const Departament*& d1, const Departament*& d2) const
+	int compare( Departament*const& d1,  Departament*const& d2) const
 	{
 		if (d1->count == d2->count and d1->salary == d2->salary)
 			return 0;
@@ -81,7 +81,7 @@ class CountAndSalaryCmp : public Ñompare<Departament*>
 };
 class NameAndAddressAndCountCmp: public Ñompare<Departament*>
 {
-	int compare(const Departament*& d1, const Departament*& d2) const
+	int compare( Departament* const& d1,  Departament* const& d2) const
 	{
 		if (d1->name == d2->name and d1->count == d2->count\
 			and d1->address == d2->address)
@@ -102,7 +102,7 @@ class NameAndAddressAndCountCmp: public Ñompare<Departament*>
 };
 class ALLCmp : public Ñompare<Departament*>
 {
-	int compare(const Departament*& d1, const Departament*& d2) const
+	int compare( Departament* const& d1,  Departament* const& d2) const
 	{
 		if (d1->name == d2->name and d1->count == d2->count and d1->salary == d2->salary and d1->floor == d2->floor\
 			and d1->address == d2->address and d1->work_time == d2->work_time)

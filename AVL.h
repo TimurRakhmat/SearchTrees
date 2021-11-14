@@ -6,7 +6,7 @@ using namespace std;
 template<class T1, class T2>
 class AVL : public BS<T1, T2>
 {
-public:
+protected:
 	//init
 	class NodeA : public BS<T1, T2>::Node
 	{
@@ -14,6 +14,7 @@ public:
 		int h = 0;
 		NodeA() :BS<T1, T2>::Node() {}
 	};
+public:
 	AVL(const Ñompare<T1>* _comparator) : BS<T1, T2>(_comparator) {	}
 	AVL(const AC<T1, T2>& _tree) : BS<T1, T2>(_tree) {}
 
@@ -90,7 +91,7 @@ protected:
 			typename BS<T1, T2>::Node** node = nodes.top();
 			set_height(*node);
 			int delta = get_delta(*node);
-
+			// add delta
 			if (delta > 1)
 			{
 				if (get_delta((*node)->right) < 0) {
